@@ -167,5 +167,66 @@ namespace UnitTests
             Assert.AreEqual(300, game.Score());
             Assert.IsTrue(game.Completed);
         }
+
+        [TestMethod]
+        public void TestBadValues()
+        {
+            var game = new Game();
+
+            bool threwError;
+            try
+            {
+                threwError = false;
+                game.Roll(-1);
+            }
+            catch (Exception)
+            {
+                threwError = true;
+            }
+            Assert.IsTrue(threwError);
+
+            try
+            {
+                threwError = false;
+                game.Roll(11);
+            }
+            catch (Exception)
+            {
+                threwError = true;
+            }
+            Assert.IsTrue(threwError);
+
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+            game.Roll(1);
+
+            try
+            {
+                threwError = false;
+                game.Roll(1);
+            }
+            catch (Exception)
+            {
+                threwError = true;
+            }
+            Assert.IsTrue(threwError);
+        }
     }
 }

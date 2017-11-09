@@ -32,6 +32,8 @@ namespace Bowling
         {
             if (Completed)
                 throw new Exception("Game already completed, can't roll any more");
+            if (pins < 0 || pins > 10)
+                throw new Exception("Can only throw 0-10 pins");
 
             foreach (var each in FindBonusRolls())
                 each.AddBonus(pins);
