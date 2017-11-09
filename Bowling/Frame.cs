@@ -8,6 +8,8 @@ namespace Bowling
 {
     class Frame
     {
+        const int MAX_ROLLS = 2;
+        
         public IList<Roll> Rolls { get; set; } = new List<Roll>();
 
         public int Pins => Rolls.Sum(r => r.Pins);
@@ -22,8 +24,7 @@ namespace Bowling
                 Pins = pins
             };
 
-            if (IsSpare(roll))
-                roll.Spare = true;
+            roll.Spare = IsSpare(roll);
 
             Rolls.Add(roll);
         }
@@ -44,6 +45,7 @@ namespace Bowling
         }
     }
 
+    // TODO: Rename LastFrame
     class TenthFrame : Frame
     {
         public override bool Completed
@@ -64,6 +66,8 @@ namespace Bowling
             {
                 if (Rolls.Any())
                 {
+                    // The 3rd frame never counts,
+                    // and neither does the 2nd if the 1st is a strike.
                     return Rolls.Sum(r => r.Score);
                 }
                 else
