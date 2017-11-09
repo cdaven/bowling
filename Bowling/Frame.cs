@@ -9,8 +9,9 @@ namespace Bowling
     class Frame
     {
         public IList<Roll> Rolls { get; set; } = new List<Roll>();
+
         public int Pins => Rolls.Sum(r => r.Pins);
-        public int Points => Rolls.Sum(r => r.Pins + r.Bonus);
+        public virtual int Score => Rolls.Sum(r => r.Score);
 
         public virtual bool Completed => Rolls.Count == 2 || Pins == 10;
 
@@ -21,10 +22,20 @@ namespace Bowling
                 Pins = pins
             };
 
-            if (!roll.Strike && Rolls.Any() && Rolls.Last().Pins + pins == 10)
+            if (IsSpare(roll))
                 roll.Spare = true;
 
             Rolls.Add(roll);
+        }
+
+        private bool IsSpare(Roll roll)
+        {
+            if (!Rolls.Any())
+                return false;
+            if (roll.Strike)
+                return false;
+
+            return Rolls.Last().Pins + roll.Pins == 10;
         }
 
         public override string ToString()
@@ -48,6 +59,20 @@ namespace Bowling
             }
         }
 
+        public override int Score {
+            get
+            {
+                if (Rolls.Any())
+                {
+                    return Rolls.Sum(r => r.Score);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
         public override void Roll(int pins)
         {
             base.Roll(pins);
@@ -56,6 +81,7 @@ namespace Bowling
                 Rolls.Last().Pins = 0;
             if (Rolls.Count == 2 && Rolls.First().Strike)
                 Rolls.Last().Pins = 0;
+
         }
     }
 }

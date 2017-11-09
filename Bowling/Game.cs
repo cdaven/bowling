@@ -43,7 +43,7 @@ namespace Bowling
 
         public int Score()
         {
-            return frames.Sum(f => f.Points);
+            return frames.Sum(f => f.Score);
         }
 
         private Frame GetCurrentFrame()
