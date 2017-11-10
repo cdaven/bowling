@@ -12,33 +12,28 @@ namespace Bowling
 
         private IList<Frame> frames;
 
-        public Game()
+        public Game(int numFrames = 10, int numPins = 10)
         {
-            frames = new List<Frame>() {
-                new Frame(),
-                new Frame(),
-                new Frame(),
-                new Frame(),
-                new Frame(),
-                new Frame(),
-                new Frame(),
-                new Frame(),
-                new Frame(),
-                new LastFrame()
-            };
+            frames = CreateFrames(numFrames, numPins);
+        }
+
+        private IList<Frame> CreateFrames(int number = 10, int pins = 10)
+        {
+            var frames = new List<Frame>();
+            for (var i = 0; i < number - 1; i++)
+            {
+                frames.Add(new Frame(numPins: pins));
+            }
+            frames.Add(new LastFrame(numPins: pins));
+            return frames;
         }
 
         public void Roll(int pins)
         {
-            if (Completed)
-                throw new Exception("Game already completed, can't roll any more");
-            if (pins < 0 || pins > 10)
-                throw new Exception("Can only throw 0-10 pins");
+            GetCurrentFrame().Roll(pins);
 
             foreach (var each in FindBonusRolls())
                 each.AddBonus(pins);
-
-            GetCurrentFrame().Roll(pins);
         }
 
         public int Score()
@@ -48,16 +43,21 @@ namespace Bowling
 
         private Frame GetCurrentFrame()
         {
-            return frames.FirstOrDefault(f => !f.Completed);
+            var frame = frames.FirstOrDefault(f => !f.Completed);
+            if (frame == null)
+                throw new Exception("Game is already completed, cannot roll more");
+            return frame;
         }
 
         private IEnumerable<Roll> FindBonusRolls()
         {
-            var lastRolls = frames.SelectMany(f => f.Rolls).Reverse();
+            var previousRolls = frames.SelectMany(f => f.Rolls)
+                .Reverse()
+                .Skip(1);
 
             var bonusRolls = new List<Roll>();
-            bonusRolls.AddRange(lastRolls.Take(1).Where(r => r.Spare));
-            bonusRolls.AddRange(lastRolls.Take(2).Where(r => r.Strike));
+            bonusRolls.AddRange(previousRolls.Take(1).Where(r => r.Spare));
+            bonusRolls.AddRange(previousRolls.Take(2).Where(r => r.Strike));
             return bonusRolls;
         }
 

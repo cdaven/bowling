@@ -8,17 +8,27 @@ namespace Bowling
 {
     class Frame
     {
-        const int MAX_ROLLS = 2;
-        
         public IList<Roll> Rolls { get; set; } = new List<Roll>();
 
         public int Pins => Rolls.Sum(r => r.Pins);
         public virtual int Score => Rolls.Sum(r => r.Score);
 
-        public virtual bool Completed => Rolls.Count == 2 || Pins == 10;
+        public virtual bool Completed => Rolls.Count == MaxRolls || Pins == NumPins;
+
+        protected readonly int MaxRolls;
+        protected readonly int NumPins;
+
+        public Frame(int maxRolls = 2, int numPins = 10)
+        {
+            MaxRolls = maxRolls;
+            NumPins = numPins;
+        }
 
         public virtual void Roll(int pins)
         {
+            if (pins < 0 || pins > NumPins)
+                throw new Exception("Can only roll 0-10 pins");
+
             var roll = new Roll()
             {
                 Pins = pins
@@ -36,7 +46,7 @@ namespace Bowling
             if (roll.Strike)
                 return false;
 
-            return Rolls.Last().Pins + roll.Pins == 10;
+            return NumPins == Rolls.Last().Pins + roll.Pins;
         }
 
         public override string ToString()
@@ -47,6 +57,11 @@ namespace Bowling
 
     class LastFrame : Frame
     {
+        public LastFrame(int maxRolls = 3, int numPins = 10)
+            : base(maxRolls, numPins)
+        {
+        }
+
         public override bool Completed
         {
             get
@@ -54,7 +69,7 @@ namespace Bowling
                 if (Rolls.Count < 2)
                     return false;
                 else if (Rolls.Count == 2)
-                    return Pins < 10;
+                    return Pins < NumPins;
 
                 return true;
             }
@@ -80,7 +95,7 @@ namespace Bowling
         {
             base.Roll(pins);
 
-            if (Rolls.Count == 3)
+            if (Rolls.Count == MaxRolls)
                 Rolls.Last().Pins = 0;
             if (Rolls.Count == 2 && Rolls.First().Strike)
                 Rolls.Last().Pins = 0;

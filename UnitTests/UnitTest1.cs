@@ -19,26 +19,16 @@ namespace UnitTests
         public void TestZeroes()
         {
             var game = new Game();
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
-            game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
+            game.Roll(0); game.Roll(0);
             Assert.AreEqual(0, game.Score());
             Assert.IsTrue(game.Completed);
         }

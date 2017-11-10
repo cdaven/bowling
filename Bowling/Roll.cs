@@ -8,13 +8,11 @@ namespace Bowling
 {
     class Roll
     {
-        const int MAX_PINS = 10;
-        
         public int Pins { get; set; } = 0;
         public int Bonus { get; private set; } = 0;
         public int Score => Pins + Bonus;
 
-        public bool Strike => Pins == MAX_PINS;
+        public bool Strike => Pins == 10;
         public bool Spare { get; set; } = false;
 
         public void AddBonus(int pins)
