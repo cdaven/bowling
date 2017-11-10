@@ -13,7 +13,7 @@ namespace Bowling
         public int Pins => Rolls.Sum(r => r.Pins);
         public virtual int Score => Rolls.Sum(r => r.Score);
 
-        public virtual bool Completed => Rolls.Count == 2 || Pins == NumPins;
+        public virtual bool IsCompleted => Rolls.Count == 2 || Pins == NumPins;
 
         protected readonly int NumPins;
 
@@ -55,7 +55,7 @@ namespace Bowling
         {
         }
 
-        public override bool Completed
+        public override bool IsCompleted
         {
             get
             {

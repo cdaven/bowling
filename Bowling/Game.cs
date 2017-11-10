@@ -6,24 +6,21 @@ namespace Bowling
 {
     public class Game
     {
-        public bool Completed => frames.All(f => f.Completed);
+        public bool IsCompleted => frames.All(f => f.IsCompleted);
 
-        private IList<Frame> frames;
+        private IEnumerable<Frame> frames;
 
         public Game(int numFrames = 10, int numPins = 10)
         {
             frames = CreateFrames(numFrames, numPins);
         }
 
-        private IList<Frame> CreateFrames(int number = 10, int pins = 10)
+        private IEnumerable<Frame> CreateFrames(int number = 10, int pins = 10)
         {
-            var frames = new List<Frame>();
+            IList<Frame> frames = new List<Frame>() { new LastFrame(pins) };
             for (var i = 0; i < number - 1; i++)
-            {
                 frames.Add(new Frame(pins));
-            }
-            frames.Add(new LastFrame(pins));
-            return frames;
+            return frames.Reverse();
         }
 
         public void Roll(int pins)
@@ -39,29 +36,26 @@ namespace Bowling
 
         private void AddBonusesToPreviousRolls(int pins)
         {
-            var sparesAndStrikes = GetPreviousSparesIfAny()
-                .Concat(GetPreviousStrikesIfAny());
-
-            foreach (var each in sparesAndStrikes)
+            foreach (var each in GetPreviousSparesIfAny().Concat(GetPreviousStrikesIfAny()))
                 each.AddBonus(pins);
         }
 
         private Frame GetCurrentFrame()
         {
-            var frame = frames.FirstOrDefault(f => !f.Completed);
+            var frame = frames.FirstOrDefault(f => !f.IsCompleted);
             if (frame == null)
                 throw new Exception("Game is already completed, cannot roll more");
             return frame;
         }
 
-        private IEnumerable<Roll> GetPreviousSparesIfAny(int lookBack = 1)
+        private IEnumerable<Roll> GetPreviousSparesIfAny()
         {
-            return GetPreviousRolls().Take(lookBack).Where(r => r.IsSpare);
+            return GetPreviousRolls().Take(1).Where(r => r.IsSpare);
         }
 
-        private IEnumerable<Roll> GetPreviousStrikesIfAny(int lookBack = 2)
+        private IEnumerable<Roll> GetPreviousStrikesIfAny()
         {
-            return GetPreviousRolls().Take(lookBack).Where(r => r.IsStrike);
+            return GetPreviousRolls().Take(2).Where(r => r.IsStrike);
         }
 
         private IEnumerable<Roll> GetPreviousRolls()

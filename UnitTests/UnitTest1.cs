@@ -12,7 +12,7 @@ namespace UnitTests
         {
             var game = new Game();
             Assert.AreEqual(0, game.Score());
-            Assert.IsFalse(game.Completed);
+            Assert.IsFalse(game.IsCompleted);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace UnitTests
             game.Roll(0); game.Roll(0);
             game.Roll(0); game.Roll(0);
             Assert.AreEqual(0, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace UnitTests
             game.Roll(1); game.Roll(1);
             game.Roll(1); game.Roll(1);
             Assert.AreEqual(20, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace UnitTests
             game.Roll(5);
             game.Roll(0);
             Assert.AreEqual(19 * 5 + 9 * 5, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace UnitTests
             game.Roll(0);
             game.Roll(0);
             Assert.AreEqual(30+20+10, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
 
         [TestMethod]
@@ -125,7 +125,7 @@ namespace UnitTests
             game.Roll(5);
             game.Roll(10);
             Assert.AreEqual(200, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
 
         [TestMethod]
@@ -145,7 +145,7 @@ namespace UnitTests
             game.Roll(10);
             game.Roll(10);
             Assert.AreEqual(300, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
 
         [TestMethod]

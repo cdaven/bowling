@@ -19,7 +19,7 @@ namespace UnitTests
             game.Roll(0); game.Roll(0);
             game.Roll(0); game.Roll(0);
             Assert.AreEqual(0, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace UnitTests
             game.Roll(10);
             game.Roll(10); 
             Assert.AreEqual(7 * 30, game.Score());
-            Assert.IsTrue(game.Completed);
+            Assert.IsTrue(game.IsCompleted);
         }
     }
 }
