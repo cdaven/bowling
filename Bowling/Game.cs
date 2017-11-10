@@ -24,7 +24,7 @@ namespace Bowling
                 new Frame(),
                 new Frame(),
                 new Frame(),
-                new TenthFrame()
+                new LastFrame()
             };
         }
 

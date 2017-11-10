@@ -45,8 +45,7 @@ namespace Bowling
         }
     }
 
-    // TODO: Rename LastFrame
-    class TenthFrame : Frame
+    class LastFrame : Frame
     {
         public override bool Completed
         {
