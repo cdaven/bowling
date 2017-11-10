@@ -37,26 +37,16 @@ namespace UnitTests
         public void TestOnes()
         {
             var game = new Game();
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
-            game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
+            game.Roll(1); game.Roll(1);
             Assert.AreEqual(20, game.Score());
             Assert.IsTrue(game.Completed);
         }

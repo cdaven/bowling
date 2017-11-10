@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bowling
 {
@@ -22,9 +20,9 @@ namespace Bowling
             var frames = new List<Frame>();
             for (var i = 0; i < number - 1; i++)
             {
-                frames.Add(new Frame(numPins: pins));
+                frames.Add(new Frame(pins));
             }
-            frames.Add(new LastFrame(numPins: pins));
+            frames.Add(new LastFrame(pins));
             return frames;
         }
 
@@ -41,7 +39,9 @@ namespace Bowling
 
         private void AddBonusesToPreviousRolls(int pins)
         {
-            var sparesAndStrikes = GetPreviousSparesIfAny().Union(GetPreviousStrikesIfAny());
+            var sparesAndStrikes = GetPreviousSparesIfAny()
+                .Concat(GetPreviousStrikesIfAny());
+
             foreach (var each in sparesAndStrikes)
                 each.AddBonus(pins);
         }
@@ -56,12 +56,12 @@ namespace Bowling
 
         private IEnumerable<Roll> GetPreviousSparesIfAny(int lookBack = 1)
         {
-            return GetPreviousRolls().Take(lookBack).Where(r => r.Spare);
+            return GetPreviousRolls().Take(lookBack).Where(r => r.IsSpare);
         }
 
         private IEnumerable<Roll> GetPreviousStrikesIfAny(int lookBack = 2)
         {
-            return GetPreviousRolls().Take(lookBack).Where(r => r.Strike);
+            return GetPreviousRolls().Take(lookBack).Where(r => r.IsStrike);
         }
 
         private IEnumerable<Roll> GetPreviousRolls()

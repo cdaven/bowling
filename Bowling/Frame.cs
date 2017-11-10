@@ -13,14 +13,12 @@ namespace Bowling
         public int Pins => Rolls.Sum(r => r.Pins);
         public virtual int Score => Rolls.Sum(r => r.Score);
 
-        public virtual bool Completed => Rolls.Count == MaxRolls || Pins == NumPins;
+        public virtual bool Completed => Rolls.Count == 2 || Pins == NumPins;
 
-        protected readonly int MaxRolls;
         protected readonly int NumPins;
 
-        public Frame(int maxRolls = 2, int numPins = 10)
+        public Frame(int numPins = 10)
         {
-            MaxRolls = maxRolls;
             NumPins = numPins;
         }
 
@@ -29,24 +27,19 @@ namespace Bowling
             if (pins < 0 || pins > NumPins)
                 throw new Exception("Can only roll 0-10 pins");
 
-            var roll = new Roll()
-            {
-                Pins = pins
-            };
-
-            roll.Spare = IsSpare(roll);
-
+            var roll = new Roll(pins);
             Rolls.Add(roll);
+            roll.IsSpare = IsSpare();
         }
 
-        private bool IsSpare(Roll roll)
+        private bool IsSpare()
         {
-            if (!Rolls.Any())
-                return false;
-            if (roll.Strike)
+            if (Rolls.Count < 2)
                 return false;
 
-            return NumPins == Rolls.Last().Pins + roll.Pins;
+            var lastTwoRolls = Rolls.Reverse().Take(2);
+            return NumPins == lastTwoRolls.Sum(r => r.Pins)
+                && !lastTwoRolls.Any(r => r.IsStrike);
         }
 
         public override string ToString()
@@ -57,8 +50,8 @@ namespace Bowling
 
     class LastFrame : Frame
     {
-        public LastFrame(int maxRolls = 3, int numPins = 10)
-            : base(maxRolls, numPins)
+        public LastFrame(int numPins = 10)
+            : base(numPins)
         {
         }
 
@@ -70,36 +63,29 @@ namespace Bowling
                     return false;
                 else if (Rolls.Count == 2)
                     return Pins < NumPins;
-
-                return true;
+                else
+                    return true;
             }
         }
 
-        public override int Score {
+        public override int Score
+        {
             get
             {
-                if (Rolls.Any())
-                {
-                    // The 3rd frame never counts,
-                    // and neither does the 2nd if the 1st is a strike.
-                    return Rolls.Sum(r => r.Score);
-                }
-                else
-                {
+                if (!Rolls.Any())
                     return 0;
-                }
+                else if (Rolls.First().IsStrike)
+                    // If the first roll was a strike, we don't count the rolls after it
+                    return Rolls.First().Score;
+                else
+                    // Otherwise, we count the first 2 rolls
+                    return Rolls.Take(2).Sum(r => r.Score);
             }
         }
 
         public override void Roll(int pins)
         {
             base.Roll(pins);
-
-            if (Rolls.Count == MaxRolls)
-                Rolls.Last().Pins = 0;
-            if (Rolls.Count == 2 && Rolls.First().Strike)
-                Rolls.Last().Pins = 0;
-
         }
     }
 }

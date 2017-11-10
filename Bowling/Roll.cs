@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Bowling
+﻿namespace Bowling
 {
     class Roll
     {
-        public int Pins { get; set; } = 0;
+        public int Pins { get; private set; } = 0;
         public int Bonus { get; private set; } = 0;
         public int Score => Pins + Bonus;
 
-        public bool Strike => Pins == 10;
-        public bool Spare { get; set; } = false;
+        public bool IsStrike => Pins == 10;
+        public bool IsSpare { get; set; } = false;
+
+        public Roll(int pins)
+        {
+            Pins = pins;
+        }
 
         public void AddBonus(int pins)
         {
