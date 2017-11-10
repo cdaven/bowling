@@ -31,14 +31,19 @@ namespace Bowling
         public void Roll(int pins)
         {
             GetCurrentFrame().Roll(pins);
-
-            foreach (var each in FindBonusRolls())
-                each.AddBonus(pins);
+            AddBonusesToPreviousRolls(pins);
         }
 
         public int Score()
         {
             return frames.Sum(f => f.Score);
+        }
+
+        private void AddBonusesToPreviousRolls(int pins)
+        {
+            var sparesAndStrikes = GetPreviousSparesIfAny().Union(GetPreviousStrikesIfAny());
+            foreach (var each in sparesAndStrikes)
+                each.AddBonus(pins);
         }
 
         private Frame GetCurrentFrame()
@@ -49,16 +54,21 @@ namespace Bowling
             return frame;
         }
 
-        private IEnumerable<Roll> FindBonusRolls()
+        private IEnumerable<Roll> GetPreviousSparesIfAny(int lookBack = 1)
         {
-            var previousRolls = frames.SelectMany(f => f.Rolls)
+            return GetPreviousRolls().Take(lookBack).Where(r => r.Spare);
+        }
+
+        private IEnumerable<Roll> GetPreviousStrikesIfAny(int lookBack = 2)
+        {
+            return GetPreviousRolls().Take(lookBack).Where(r => r.Strike);
+        }
+
+        private IEnumerable<Roll> GetPreviousRolls()
+        {
+            return frames.SelectMany(f => f.Rolls)
                 .Reverse()
                 .Skip(1);
-
-            var bonusRolls = new List<Roll>();
-            bonusRolls.AddRange(previousRolls.Take(1).Where(r => r.Spare));
-            bonusRolls.AddRange(previousRolls.Take(2).Where(r => r.Strike));
-            return bonusRolls;
         }
 
         public override string ToString()
